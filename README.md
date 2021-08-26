@@ -4,11 +4,11 @@
 
 #### Java基础
 
-* [Java编程基础](java/Java基础知识)
+* [Java编程基础](/java/Java基础知识.md)
 
 #### Java容器
 
-- [Java容器](/java/Java容器)
+- [Java容器](/java/Java容器.md)
 
 #### JVM
 
