@@ -4,10 +4,9 @@
 
 #### Java基础
 
-* [Java编程基础](/java/Java基础知识.md)
-
+- [Java编程基础](/java/Java基础知识.md)
 - [Java容器](/java/Java容器.md)
-- [Java异常与反射机制](/java/Java异常+反射)
+- [Java异常与反射机制](/java/Java异常与反射.md)
 
 #### JVM
 
