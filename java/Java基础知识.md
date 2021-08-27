@@ -1,6 +1,6 @@
-## :tomato: Java基础知识
+## 🍄Java基础知识
 
-### :tada: Java程序基础
+### 🌻Java程序基础
 
 - #### 基本数据类型
 
@@ -76,7 +76,7 @@ public class Main {
 
 :warning:null和“”不相等，nul表示不存在，即该变量不指向任何对象。而空字符串是一个实际存在的有效对象，它不等于null
 
-### :dancers:面向对象
+###  🐈面向对象
 
 :warning:一个Java源文件可以包含多个类的定义，但是只能定义一个public类，且public类名必须与文件名一致
 
