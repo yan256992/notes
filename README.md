@@ -5,8 +5,9 @@
 #### Java基础
 
 - [Java编程基础](/java/Java基础知识.md)
-- [Java容器](/java/Java容器.md)
+- [Java集合概述](/java/Java集合概述.md)
 - [Java异常与反射机制](/java/Java异常与反射.md)
+- [HashMap详解](/java/HashMap详解)
 
 #### JVM
 
