@@ -217,39 +217,9 @@ section.cover.has-mask .mask {
     box-shadow: 2px 2px 20px 6px #ddd !important;
 } */
 
-/* 代码块 */
-.markdown-section pre:before {
-    content: '';
-    display: block;
-    background: url(https://files.mdnice.com/point.png);
-    height: 30px;
-    width: 100%;
-    background-size: 40px;
-    background-repeat: no-repeat;
-    background-color: #282c34;
-    margin-bottom: -7px;
-    margin-top: 10px;
-    margin-left: -3px;
-    border-radius: 5px;
-    background-position: 10px 10px;
-}
-/* 代码块 */
-.markdown-section pre>code {
-    color: #c0c3c1 !important;
-    font-family: 'Inconsolata', consolas,"PingFang SC", "Microsoft YaHei", monospace !important;
-    background-color: #282c34 !important;    
-    font-size: 15px !important;
-    white-space: pre !important;
-    line-height: 1.5 !important;
-    -moz-tab-size: 4 !important;
-    -o-tab-size: 4 !important;
-    tab-size: 4 !important;
 
-}
-/* 代码块 */
-markdown-section code, .markdown-section pre {
-    background-color: #282c34;
-}
+
+
 .token.directive.keyword{
     color: #4faee2 !important;
 }

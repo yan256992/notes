@@ -9,8 +9,12 @@
 - [Java异常与反射机制](/java/Java异常与反射.md)
 - [HashMap详解](/java/HashMap源码解读)
 - [Java IO相关知识](/java/JavaIO学习笔记)
+- [Java常用类](/java/Java常用类)
+- [Java动态代理](/java/代理模式详解)
 
 ### JVM
+
+
 
 ### Java并发编程
 
@@ -20,9 +24,15 @@
 
 ### Spring
 
+
+
 ### SpringMVC
 
+
+
 ### MyBatis && MybatisPlus
+
+
 
 ### SpringBoot
 
