@@ -1,27 +1,269 @@
-#  🐑Java集合概述
+##  🐑Java集合概述
 
-## Collection
+### Collection
 
 ![image-20210822165625028](https://gitee.com/yan256992/cloudimages/raw/master/img/image-20210822165625028.png)
 
-### Set
+#### Set
 
 - TreeSet 内部基于红黑树实现，支持有序的操作，但是查找效率不如HashSet，HashSet的效率是O(1)，TreeSet是O(logN)
 - HashSet 内部基于哈希表实现，支持快速查找，但不支持有序操作。
 - LinkedHashSet 具有HashSet的查找效率并且内部使用双向链表维护元素的插入顺序
 
-### List
+Set就相当于一个不存储Value的Map，存储的元素不重复，因此，`Set常被用于元素的去重`
+
+`Set`用于存储不重复的元素集合，它主要提供以下几个方法：
+
+- 将元素添加进`Set<E>`：`boolean add(E e)`
+- 将元素从`Set<E>`删除：`boolean remove(Object e)`
+- 判断是否包含元素：`boolean contains(Object e)`
+
+因为放入的key和Map类似，因此也需要正确实现`equals()`和`hashCode()`方法
+
+如果需要有序的集合就需要使用`TreeSet`
+
+![image-20210831170058011](https://gitee.com/yan256992/cloudimages/raw/master/img/image-20210831170058011.png)
+
+#### List
+
+
+
+
+
+> List是一种有序列表，他的行为和数组几乎完全相同，每个元素可以通过索引获取自己的位置
 
 - ArrayList 基于动态数组实现 支持随机访问
 - Vector 和ArrayList类似 但是是线程安全的
 - LinkedList 基于双向链表实现 只能顺序访问 但是可以快速的在链表中间插入和删除元素 ==LInkedList还可以用作栈 队列 和双向队列==
 
-### Queue
+##### List接口方法
+
+- 在末尾加一个元素：`boolean add(E e)`
+
+- 在指定的索引添加元素：`boolean add(int index, E e)`
+
+- 删除指定索引的元素：`E remove(int index)`
+
+- 删除某个元素：`boolean remove(Object o)`
+
+- 获取指定索引的元素：`E get(int index)`
+
+- 获取链表的大小：`int size()`
+
+- 转换成数组：`object[] toArray(T[] t)` 
+
+- 是否包含某个元素：`boolean contains(Object o)`
+
+- 返回某个元素的索引：`int indexOf(Object o)`
+
+- 
+
+  ```java
+  List<Integer> list = List.of(12, 34, 56);
+  Integer[] array = list.toArray(new Integer[3]);
+  ```
+
+List允许添加重复的元素，同时可以添加`null`
+
+##### 遍历List
+
+1. 采用for循环
+
+   ```java
+   public class Main {
+       public static void main(String[] args) {
+           List<String> list = List.of("apple", "pear", "banana");
+           for (int i=0; i<list.size(); i++) {
+               String s = list.get(i);
+               System.out.println(s);
+           }
+       }
+   }
+   ```
+
+   但是这种方式对于LinkedList来说并不高效，索引越大，访问速度越慢
+
+   所以要使用迭代器`Iterator`来访问LIst，Iterator本身也是一个对象，但是他是在List嗲用iterator()方法的时候创建的
+
+   ```java
+   public class Main {
+       public static void main(String[] args) {
+           List<String> list = List.of("apple", "pear", "banana");
+           for (Iterator<String> it = list.iterator(); it.hasNext(); ) {
+               String s = it.next();
+               System.out.println(s);
+           }
+       }
+   }
+   //通过Iterator遍历List永远是最高效的方式。并且，由于Iterator遍历是如此常用，所以，Java的for each循环本身就可以帮我们使用Iterator遍 历。把上面的代码再改写如下：
+   public class Main {
+       public static void main(String[] args) {
+           List<String> list = List.of("apple", "pear", "banana");
+           for (String s : list) {
+               System.out.println(s);
+           }
+       }
+   }
+   ```
+
+   
+
+#### Queue
 
 - LinkedList 可以用它实现双向队列
 - PriorityQueue 基于对结构实现 可以用它实现优先队列
 
-## Map
+```Java
+package swpu.集合;
+import java.util.LinkedList;
+import java.util.Queue;
+/**
+ * 功能描述：
+ * @Author: ygq
+ * @Date: 2021/8/31 17:02
+ */
+public class QueueTest {
+    public static void main(String[] args) {
+        Queue<Integer> queue = new LinkedList<>();
+        //offer也可以 offer是Queue的方法
+        queue.add(1);
+        queue.add(2);
+        queue.add(3);
+        queue.add(4);
+        queue.add(5);
+        System.out.println(queue.element()); //获取队首元素 但是不删除 区别就是这个为空的话抛出异常
+        System.out.println(queue.peek());    //同上
+        System.out.println("size:"+queue.size());
+        System.out.println(queue.poll());  //获取元素并删除
+        System.out.println("size:"+queue.size());
+    }
+}
+```
+
+#### PriorityQueue优先队列
+
+和普通的队列类似 但是不同的是每次出队的元素都是当前优先级最高的元素，因此，如果使用PriorityQueue的时候必须给每个元素定义一个优先级
+
+```Java
+public static void main(String[] args) {
+    Queue<String> pq = new PriorityQueue<>();
+    pq.offer("Apple");
+    pq.offer("Pear");
+    pq.offer("Banana");
+    Iterator<String> iterator = pq.iterator();
+    System.out.println(pq.poll());//Apple
+    System.out.println(pq.poll());//Banana
+    System.out.println(pq.poll());//Pear
+    System.out.println(pq.poll());//null
+}
+```
+
+应用
+
+```java
+package swpu.集合;
+import java.util.*;
+/**
+ * 功能描述：
+ * @Author: ygq
+ * @Date: 2021/8/31 17:13
+ */
+public class PQTest {
+    public static void main(String[] args) {
+        Queue<Person> queue = new PriorityQueue<>(new MyComparable());
+        queue.offer(new Person("张三","B1"));
+        queue.offer(new Person("李四","A1"));
+        queue.offer(new Person("王五","B2"));
+        queue.offer(new Person("Tina","B2"));
+        queue.offer(new Person("赵六","V1"));
+        queue.offer(new Person("Tom","V5"));
+        queue.offer(new Person("Alice","A3"));
+        System.out.println(queue.poll());
+        System.out.println(queue.poll());
+        System.out.println(queue.poll());
+        System.out.println(queue.poll());
+        System.out.println(queue.poll());
+        System.out.println(queue.poll());
+        System.out.println(queue.poll());
+//        Person{name='赵六', Level='V1'}
+//        Person{name='Tom', Level='V5'}
+//        Person{name='李四', Level='A1'}
+//        Person{name='Alice', Level='A3'}
+//        Person{name='张三', Level='B1'}
+//        Person{name='王五', Level='B2'}
+//        Person{name='Tina', Level='B2'}
+
+    }
+}
+class MyComparable implements Comparator<Person> {
+
+    @Override
+    public int compare(Person o1, Person o2) {
+          if(o1.Level.charAt(0)==o2.Level.charAt(0)){
+              return o1.Level.compareTo(o2.Level);
+          }
+          if(o1.Level.charAt(0)=='V'){
+              return -1;
+          }
+          else if (o2.Level.charAt(0)=='V'){
+              return 1;
+          }
+          else
+              return o1.Level.compareTo(o2.Level);
+    }
+}
+class Person{
+    public final String name;
+    public final String Level;
+
+    public Person(String name, String level) {
+        this.name = name;
+        Level = level;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", Level='" + Level + '\'' +
+                '}';
+    }
+}
+```
+
+#### DeQueue
+
+双端队列，允许两边都进，两头都出，这种就叫双端队列Double Ended Queue
+
+`Queue`和`Deque`出队和入队的方法：
+
+|                    | Queue                  | Deque                           |
+| :----------------- | :--------------------- | :------------------------------ |
+| 添加元素到队尾     | add(E e) / offer(E e)  | addLast(E e) / offerLast(E e)   |
+| 取队首元素并删除   | E remove() / E poll()  | E removeFirst() / E pollFirst() |
+| 取队首元素但不删除 | E element() / E peek() | E getFirst() / E peekFirst()    |
+| 添加元素到队首     | 无                     | addFirst(E e) / offerFirst(E e) |
+| 取队尾元素并删除   | 无                     | E removeLast() / E pollLast()   |
+| 取队尾元素但不删除 | 无                     | E getLast() / E peekLast()      |
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        Deque<String> deque = new LinkedList<>();
+        deque.offerLast("A"); // A
+        deque.offerLast("B"); // A <- B
+        deque.offerFirst("C"); // C <- A <- B
+        System.out.println(deque.pollFirst()); // C, 剩下A <- B
+        System.out.println(deque.pollLast()); // B, 剩下A
+        System.out.println(deque.pollFirst()); // A
+        System.out.println(deque.pollFirst()); // null
+    }
+}
+```
+
+
+
+### Map
 
 ![image-20210822170604968](https://gitee.com/yan256992/cloudimages/raw/master/img/image-20210822170604968.png)
 
@@ -30,7 +272,92 @@
 - HashTable 和HashMap类似 但是是线程安全的 这意味着当多个线程同时写入到HashTable不会导致数据不一致。但是现在都是使用COncurrentHashMap来支持线程安全 它的效率更高 因为引入了分段锁
 - LinkedHashMap 使用双向链表来维护元素的顺序 顺序为插入顺序 或者最近最少使用
 
-## 容器中的设计模式
+`Map<K, V>`是一种键-值映射表，当我们调用`put(K key, V value)`方法时，就把`key`和`value`做了映射并放入`Map`。当我们调用`V get(K key)`时，就可以通过`key`获取到对应的`value`。如果`key`不存在，则返回`null`。和`List`类似，`Map`也是一个接口，最常用的实现类是`HashMap`。
+
+如果只是想查询某个`key`是否存在，可以调用`boolean containsKey(K key)`方法。
+
+`put()`方法的签名是`V put(K key, V value)`，如果放入的`key`已经存在，`put()`方法会返回被删除的旧的`value`
+
+:warning: Map中不存在重复的key，因为放入相同的key，只会把原有的key-value对应的value给替换掉。但是可以存在重复的value
+
+#### 遍历Map
+
+```Java
+// 遍历keySet获取对应key的value
+public static void main(String[] args) {
+        Map<String,Integer> map = new HashMap<>();
+        map.put("apple",1);
+        map.put("pear",2);
+        map.put("orange",3);
+        map.put("banana",4);
+        for (String key: map.keySet()){
+            System.out.println(map.get(key));
+        }
+    }
+//同时获取Key value
+    public static void main(String[] args) {
+        Map<String,Integer> map = new HashMap<>();
+        map.put("apple",1);
+        map.put("pear",2);
+        map.put("orange",3);
+        map.put("banana",4);
+        for (Map.Entry<String,Integer> entry:map.entrySet()){
+            System.out.println(entry.getKey()+"---->"+entry.getValue());
+        }
+//        orange---->3
+//        banana---->4
+//        apple---->1
+//        pear---->2
+    }
+```
+
+我们放入`Map`的`key`是字符串`"a"`，但是，当我们获取`Map`的`value`时，传入的变量不一定就是放入的那个`key`对象。
+
+换句话讲，两个`key`应该是内容相同，但不一定是同一个对象。测试代码如下：
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        String key1 = "a";
+        Map<String, Integer> map = new HashMap<>();
+        map.put(key1, 123);
+
+        String key2 = new String("a");
+        map.get(key2); // 123
+
+        System.out.println(key1 == key2); // false
+        System.out.println(key1.equals(key2)); // true
+    }
+}
+```
+
+在Map的内部，对key的比较是通过`equals`方法实现的，我们经常使用`String`作为`key`，因为`String`已经正确覆写了`equals()`方法。但如果我们放入的`key`是一个自己写的类，就必须保证正确覆写了`equals()`方法。
+
+因此，正确使用`Map`必须保证：
+
+1. 作为`key`的对象必须正确覆写`equals()`方法，相等的两个`key`实例调用`equals()`必须返回`true`；
+2. 作为`key`的对象还必须正确覆写`hashCode()`方法，且`hashCode()`方法要严格遵循以下规范：
+
+- 如果两个对象相等，则两个对象的`hashCode()`必须相等；
+- 如果两个对象不相等，则两个对象的`hashCode()`尽量不要相等
+
+#### TreeMap
+
+我们知道Map的内部是无序的，也即遍历Map的时候顺序是不可测的。但是TreeMap在内部会对Key进行排序
+
+![image-20210831165214407](https://gitee.com/yan256992/cloudimages/raw/master/img/image-20210831165214407.png)
+
+使用TreeMap的时候放入的key必须实现Comparable接口。String、Integer这些已经实现了这个接口，因此可以直接作为key使用。如果自定义的Key没有实现则必须自定义实现排序规则
+
+```Java
+Map<Person, Integer> map = new TreeMap<>(new Comparator<Person>() {
+    	public int compare(Person p1, Person p2) {
+		return p1.name.compareTo(p2.name);
+}
+});
+```
+
+### 容器中的设计模式
 
 #### 迭代器模式
 
@@ -39,22 +366,6 @@
 Collection继承了Iterable接口 其中Iterator()方法能够产生一个Itertor对象，通过这个对象就可以迭代遍历Collection中的元素。从JDK1.5之后 可以使用foreach方法来遍历实现了Iterable接口的聚合对象
 
 > List接口继承了Collection接口，Collection接口实现了Iterable接口。Iterable接口(Java.Lang)中有Iterator Itertor也是接口（Java.utils）
-
-1. Iterator接口方法
-
-![image-20210822172913688](https://gitee.com/yan256992/cloudimages/raw/master/img/image-20210822172913688.png)
-
-2. Collection接口的方法
-
-![image-20210822173125243](https://gitee.com/yan256992/cloudimages/raw/master/img/image-20210822173125243.png)
-
-3. List接口方法
-
-![image-20210822173356452](https://gitee.com/yan256992/cloudimages/raw/master/img/image-20210822173356452.png)
-
-4. Set接口方法
-
-![image-20210822173645109](https://gitee.com/yan256992/cloudimages/raw/master/img/image-20210822173645109.png)
 
 #### 适配器模式
 
@@ -78,9 +389,9 @@ List list = Arrays.asList(arr);
 List list = Arrays.asList(1, 2, 3);
 ```
 
-## 源码解析
+### 源码解析
 
-### ArrayList
+#### ArrayList
 
 1. 概览
 
@@ -181,7 +492,7 @@ public void add(int index, E element) {
 
 ​           在ArrayList的remove方法中 是将index后面的数组元素都复制到index位置开始时间复杂度为O（N）符合数组的特性 删除和插入元素时间复杂度为O(N)
 
-### CopyOnWriteArrayList
+#### CopyOnWriteArrayList
 
 1. 读写分离
 
@@ -233,7 +544,7 @@ final void setArray(Object[] a) {
 
 所以 CopyOnWriteArrayList 不适合内存敏感以及对实时性要求很高的场景。
 
-### LinkedLIst
+#### LinkedLIst
 
 1. 概览
 
@@ -273,7 +584,7 @@ transient Node<E> last;
 
    链表不支持随机访问，插入删除只需要改变指针
 
-### HashMap
+#### HashMap
 
 **简介**
 
@@ -311,3 +622,11 @@ static final int hash(Object key) {
 负载因子用来控制数据的疏密程度，太小导致数组的利用率低，存放的数据会很分散。0.75是官方给出的一个比较好的临界值
 
 默认容量是16，当超过16*0.75=12个数据的时候就需要对数据进行扩容 扩容涉及到了rehash 复制数据等操作 所以非常消耗性能
+
+### References
+
+- 廖雪峰：https://www.liaoxuefeng.com/
+- JavaGuide：https://snailclimb.gitee.io/javaguide/#/
+- CS-WIKI：https://veal98.gitee.io/cs-wiki/#/
+
+- CS-Notes：http://www.cyc2018.xyz/

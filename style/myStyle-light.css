@@ -71,18 +71,7 @@ section.cover .cover-main {
     padding: 30px 30px 40px 30px !important;
     border-radius: 20px;
 }
-/* 行代码块 */
-.markdown-section code {
-    font-size: 14px;
-    font-family: Consolas, monospace, serif;
-    white-space: nowrap;
-    padding: 0 4px;
-    border-radius: 3px;
-    background: rgb(247, 247, 247);
-    white-space: normal;
-    color: rgb(173, 141, 229);
-    
-}
+
 
 /* 搜索框 */
 /* .search {
