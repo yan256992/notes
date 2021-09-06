@@ -1,6 +1,6 @@
 ##  😋  剑指Offer刷题笔记
 
-### 翻转链表
+#### 翻转链表
 
 1.利用栈的先进后出 先将所有的节点加入到栈中 然后一个一个弹出
 
@@ -54,7 +54,7 @@ public ListNode reverseList(ListNode head) {
     return prev;
 }
 ~~~
-  ### 删除链表中倒数第K个节点
+  #### 删除链表中倒数第K个节点
   ~~~java
   public ListNode removeNthFromEnd(ListNode head, int n) {
       if(head == null) return null;
@@ -76,7 +76,7 @@ public ListNode reverseList(ListNode head) {
       return  head;
   }
   ~~~
- ### LRU缓存的设计
+ #### LRU缓存的设计
  1. 自己实现双向链表和哈希表
  ~~~java
 class LRUCache {
@@ -167,7 +167,7 @@ class LRUCache {
     }
 }
  ~~~
-### 合并两个有序链表
+#### 合并两个有序链表
 ~~~java
 public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
     if(l1==null) return l2;
@@ -185,13 +185,11 @@ public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
 
 #### 56 - I. 数组中数字出现的次数 （中等）
 
-> 一个整型数组 nums 里除两个数字之外，其他数字都出现了两次。请写程序找出这两个只出现一次的数字。要求时间复杂度是O(n)，空间复杂度是O(1)。
->
-> 输入：nums = [4,1,4,6]
->         输出：[1,6] 或 [6,1]
->
-> 来源：力扣（LeetCode）
->         链接：https://leetcode-cn.com/problems/shu-zu-zhong-shu-zi-chu-xian-de-ci-shu-lcof
+> 一个整型数组 nums 里除两个数字之外，其他数字都出现了两次。请写程序找出这两个只出现一次的数字。要求时间复杂度是O(n)，空间复杂度是O(1)。  	  	输入：nums = [4,1,4,6]
+>     	输出：[1,6] 或 [6,1]
+> 
+>    来源：力扣（LeetCode）
+>     链接：https://leetcode-cn.com/problems/shu-zu-zhong-shu-zi-chu-xian-de-ci-shu-lcof
 
 ```JAva
 class Solution {
@@ -225,4 +223,72 @@ class Solution {
     }
 }
 ```
+
+#### 剑指 Offer 56 - II. 数组中数字出现的次数 II
+
+> 在一个数组 nums 中除一个数字只出现一次之外，其他数字都出现了三次。请找出那个只出现一次的数字。
+>
+> 示例 1：
+>
+> 输入：nums = [3,4,3,3]
+>         输出：4
+>         链接：https://leetcode-cn.com/problems/shu-zu-zhong-shu-zi-chu-xian-de-ci-shu-ii-lcof
+
+~~~java
+class Solution {
+    public int singleNumber(int[] nums) {
+        Map<Integer,Integer> map = new HashMap<>();
+        for (int i = 0; i <nums.length ; i++) {
+            if(map.containsKey(nums[i])) {
+                int val = map.get(nums[i]);
+                val++;
+                map.put(nums[i],val);
+            }
+            else
+                map.put(nums[i],1);
+        }
+        for (Map.Entry<Integer,Integer> entry : map.entrySet()){
+            if (entry.getValue()==1){
+                return entry.getKey();
+            }
+        }
+        return -1;
+    }
+}
+~~~
+
+#### [剑指 Offer 45. 把数组排成最小的数](https://leetcode-cn.com/problems/ba-shu-zu-pai-cheng-zui-xiao-de-shu-lcof/)
+
+> 输入一个非负整数数组，把数组里所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。
+>
+> 示例 1:
+>
+> 输入: [10,2]
+>         输出: "102"
+>         示例 2:
+>
+> 输入: [3,30,34,5,9]
+>         输出: "3033459"
+>         链接：https://leetcode-cn.com/problems/ba-shu-zu-pai-cheng-zui-xiao-de-shu-lcof
+
+~~~java
+  public String minNumber(int[] nums) {
+      //定义一个小根堆 比较的规则就是交换位置后两个数的大小 这里的泛型要定义为String 不然是integer的话比较久没有意义
+    Queue<String> queue = new PriorityQueue<String>(new Comparator<String>() {
+        @Override
+        public int compare(String o1, String o2) {
+            return (o1+o2).compareTo(o2+o1);
+        }
+    });
+    //遍历数组中的数据 然后加入到优先队列 由于有限队列中存放的是String所以这里要加上""
+    for (int num:nums){
+        queue.add(num+"");
+    }
+    StringBuilder sb = new StringBuilder();
+    while (!queue.isEmpty()){
+        sb.append(queue.poll());
+    }
+    return sb.toString();
+}
+~~~
 
