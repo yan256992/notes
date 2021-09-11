@@ -289,3 +289,119 @@ class Solution {
 }
 ~~~
 
+#### [剑指 Offer 47. 礼物的最大价值](https://leetcode-cn.com/problems/li-wu-de-zui-da-jie-zhi-lcof/)
+
+> 在一个 m*n 的棋盘的每一格都放有一个礼物，每个礼物都有一定的价值（价值大于 0）。你可以从棋盘的左上角开始拿格子里的礼物，并每次向右或者向   下移动一格、直到到达棋盘的右下角。给定一个棋盘及其上面的礼物的价值，请计算你最多能拿到多少价值的礼物？ 
+>
+> 示例 1:
+>
+> 输入: 
+>    [
+>    [1,3,1],
+>    [1,5,1],
+>    [4,2,1]
+>  ]
+>   输出: 12
+>   解释: 路径 1→3→5→2→1 可以拿到最多价值的礼物。
+
+~~~java
+class Solution {
+    //思路分析
+    //要获得价值的最大值 可以考虑使用动态规划 由于走的方向只有向右和向下 所以 最左边的一列和最上面的一行的数据时直接可以通过初始化的数组得到答案
+    //其他的包含在中间的位置的最大路径可以通过两个方向得到 首先是通过它上面的位置往下移动 或者是通过左边的位置向右移动 选择二者之间较大的那一个 
+    //每次选取的都是较大值 那么最后得到的就是最大的
+    public int maxValue(int[][] grid) {
+        int m =  grid.length;
+        int n = grid[0].length;
+        int[][] dp = new int[m][n];
+        dp[0][0] = grid[0][0];
+        //竖排的值初始化
+        for (int i = 1; i <m ; i++) {
+            dp[i][0] = dp[i-1][0]+grid[i][0];
+        }
+        //横排的初始化
+        for (int i = 1; i < n; i++) {
+            dp[0][i] = dp[0][i-1]+grid[0][i];
+        }
+        for (int i = 1; i <m ; i++) {
+            for (int j = 1; j <n ; j++) {
+                dp[i][j] = Math.max(dp[i-1][j],dp[i][j-1])+grid[i][j];
+            }
+        }
+        return dp[m-1][n-1];
+    }
+}
+~~~
+
+#### [剑指 Offer 63. 股票的最大利润](https://leetcode-cn.com/problems/gu-piao-de-zui-da-li-run-lcof/)
+
+> 假设把某股票的价格按照时间先后顺序存储在数组中，请问买卖该股票一次可能获得的最大利润是多少？
+>
+> 示例 1:
+>
+> 输入: [7,1,5,3,6,4]
+>         输出: 5
+>         解释: 在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。
+>         注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格。
+
+```java
+class Solution {
+    // 定义一个dp数组 数组dp[i]表示的是以prices[i]结尾的数的最大利润
+    //最大利润 就是当前这一天的价值减去前面的最小值 和 前一天的最大利润 中的最大的那一个
+    public int maxProfit(int[] prices) {
+        //如果长度小于等于1 利润为0
+        if(prices.length <= 1) return 0;
+        //初始化最小值就是第一个数
+        int min = prices[0];
+        //定义同样大小的数组代表每一天的最大利润
+        int[] dp = new int[prices.length];
+        //初始化第一天的利润为0
+        dp[0] = 0;
+        //遍历数组 不断的更行最小值和dp[i]
+        for(int i =1;i<prices.length;i++){
+            min = Math.min(prices[i],min); //最小值更新
+            dp[i] = Math.max(prices[i]-min,dp[i-1]); //更新每一天的最大值 从当前这天的值减去最小值和 前一天的利润中找最大的那一个
+        }
+        return dp[prices.length-1];
+    }
+}
+```
+
+#### [剑指 Offer 12. 矩阵中的路径](https://leetcode-cn.com/problems/ju-zhen-zhong-de-lu-jing-lcof/)
+
+![image-20210910155247353](https://gitee.com/yan256992/cloudimages/raw/master/img/image-20210910155247353.png)
+
+```java
+class Solution {
+    public boolean exist(char[][] board, String word) {
+        //将整个二维数组的行列求出来
+        int i = board.length;
+        int j = board[0].length;
+        for (int k = 0; k < i ; k++) {
+            for (int l = 0; l <j ; l++) {
+                //遍历整个二维数组，从0,0出开始 如果从某一个位置开始遍历过后返回为true说明有路径 就直接返回 否则的话 就继续在下一个位置开始搜索
+                if(dfs(board,k,l,word,0)) return true;
+            }
+        }
+        return false;
+    }
+    //回溯搜索
+    //传入的参数包括有 字符数组 以及当前的位置（行，列） 字符串 字符串的字符索引位置
+    private boolean dfs(char[][] board, int i, int j, String word, int k) {
+            char[] ans = word.toCharArray();
+            //先判断边界条件 什么时候这个函数会返回false 具体而言就是数组的下标越界或者不符合规定  或者是当前位置时候 字符串的字符和字符数组中的值          不相同
+           if(i>=board.length || i<0 || j>=board[0].length || j<0 || board[i][j]!=ans[k]) return false;
+           //如果各方面符合 就判断当前这个位置的索引是否已经是字符串的最后一个位置 如果是就返回true 说明存在路径
+           if(k ==  word.length()-1) return true;
+           //如果还是不符合 就继续向周围扩散搜索 这时候由于这个位置已经搜索过了 所以要把这个位置设置为访问了 并且要保存这个位置的字符 
+           // 因为这次搜索不成功的话 不能影响下一次的搜索 所以在返回之前 要把这个值设置回来 
+           char temp = board[i][j];
+           board[i][j] = '\0';
+           boolean res = dfs(board,i-1,j,word,k+1)||dfs(board,i+1,j,word,k+1)||dfs(board,i,j-1,word,k+1)||dfs(board,i,j+1,word,k+1);
+           board[i][j] = temp;
+           return res;
+    }
+}
+```
+
+#### 
