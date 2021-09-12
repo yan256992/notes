@@ -183,14 +183,97 @@ public static void main(String[] args){
 
 ### String类
 
+> String类不可以被继承，底层是一个不可变的数组
+
 字符串是常量，创建之后不再改变，存储在字符串常量池中，可以共享
 
 - `String s = "Hello";`产生一个对象，字符串池中存储
 - `String s = new String("Hello");` 产生两个对象，**堆、池**各一个
 
+**euqals方法**
+
+```Java
+ public boolean equals(Object anObject) {
+        if (this == anObject) { //首先比较两个对象的地址指向相同的时候 直接返回 true
+            //自己和自己比较的时候也返回true
+            return true;
+        }
+        if (anObject instanceof String) { //先看看传进来的对象是不是String类型
+            String anotherString = (String)anObject;
+            int n = value.length;
+            if (n == anotherString.value.length) {
+                char v1[] = value;
+                char v2[] = anotherString.value;
+                int i = 0;
+                while (n-- != 0) {
+                    if (v1[i] != v2[i])
+                        return false;
+                    i++;
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+```
+
+**compareTo**
+
+String类实现了Compareble，里面有一个抽象方法叫compareTo，所以String中一定要对这个方法进行重写
+
+```java
+ public int compareTo(String anotherString) {
+        int len1 = value.length;
+        int len2 = anotherString.value.length;
+        int lim = Math.min(len1, len2);
+        char v1[] = value;
+        char v2[] = anotherString.value;
+
+        int k = 0;
+        while (k < lim) {
+            char c1 = v1[k];
+            char c2 = v2[k];
+            if (c1 != c2) {
+                return c1 - c2;
+            }
+            k++;
+        }
+        return len1 - len2;
+    }
+
+```
+
+
+
+```java
+public class StringTest {
+    public static void main(String[] args) {
+        String str = "a"+"b"+"c";
+        String str1 = "a"+"bc";
+        String str2 = "ab"+"c";
+        String str3 = "abc";
+        String str4 = "abc"+"";
+        //上述几个字符串通过反编译之后都是同一个字符串"abc"
+    }
+}
+```
+
+
+
+<img src="https://gitee.com/yan256992/cloudimages/raw/master/img/image-20210912203338351.png" alt="image-20210912203338351" style="zoom:50%;" />
+
 常用方法
 
 ```java
+String str = "abcdef";
+System.out.println(str.isEmpty());//底层就是判断这个value数组的长度是否=0
+System.out.println(str.charAt(2));
+System.out.println(str.indexOf("abc"));
+String str1 =   str.concat("yyy");
+System.out.println(str1);
+
+
 // 1. length(); 返回字符串长度
 // 2. charAt(int index); 返回某个位置的字符
 // 3. contains(String str); 判断是否包含某个字符串
@@ -226,6 +309,22 @@ sout(s1.equalsIgnoreCase(s2));// 忽略大小写比较true
 
 ```
 
+### StringBuilder类
+
+![image-20210912212515219](https://gitee.com/yan256992/cloudimages/raw/master/img/image-20210912212515219.png)
+
+
+
+```java
+public StringBuilder(String str) {
+    super(str.length() + 16);
+    append(str);
+}
+StringBuilder sb = new StringBuilder();//表面上是调用空构造器 实际上是对value数组初始化 初始化的长度为16 ，同时可以自己指定数组的长度
+```
+
+
+
 ### BigDecimal类
 
 位于math包中，主要用于精确计算浮点数
@@ -258,6 +357,20 @@ System.out.println(bigDecimal.multiply(bigDecimal1));
 | long getTimeInMilles()                                       | 毫秒为单位返回该日历的时间值               |
 
 ```Java
+
+public static void main(String[] args) throws ParseException {
+    //calendar是一个抽象类 不可以直接创造对象
+    Calendar calendar = Calendar.getInstance();
+
+    System.out.println(calendar.get(1)); //2021
+    System.out.println(calendar.get(Calendar.MONTH)); // 8 从0开始
+    System.out.println(calendar.get(Calendar.WEEK_OF_MONTH)); //3
+
+    calendar.set(Calendar.YEAR,1998);
+    System.out.println(calendar.get(1)); //1998
+
+}
+
 psvm(String[] args){
   // 1. 创建 Calendar 对象
   Calendar calendar = Calendar.getInstance();
@@ -288,6 +401,8 @@ psvm(String[] args){
 
 ### SimpleDateFormat类
 
+将字符串类型与Date()类型相互转换
+
 - SimpleDateFormat是一个以与语言环境有关的方式来格式化和解析日期的具体类
 - 进行格式化（日期→文本）、解析（文本→日期）
 - 常用的时间模式字母
@@ -295,7 +410,7 @@ psvm(String[] args){
 | 字母 | 日期或时间         | 示例 |
 | :--- | :----------------- | :--- |
 | y    | 年                 | 2019 |
-| 08   | 年中月份           | 08   |
+| M    | 年中月份           | 08   |
 | d    | 月中天数           | 10   |
 | H    | 一天中小时（0-23） | 22   |
 | m    | 分钟               | 16   |
@@ -314,13 +429,53 @@ import java.util.Date;
  */
 public class test {
     public static void main(String[] args) throws ParseException {
+        //自定义字符串的模式 看前端界面传递过来的字符串是什么样的
+        DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        //string->date
+        Date date = df.parse("2019/12/12 12:12:12");
+        System.out.println(date); //Thu Dec 12 12:12:12 CST 2019
+        //date->string
+        Date date1 = new Date();
+        System.out.println(df.format(date1)); //2021/09/12 16:40:37
+        
+        
+       
+        
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒");
         System.out.println(sdf.format(date));//2021年08月30日 18时06分08秒
-//        这里转换的时候需要和上面的输入格式一致 负责会报错
+//        这里转换的时候需要和上面的输入格式一致 否则会报错
         Date date1 = sdf.parse("2021年01月11日 12时12分12秒");
         System.out.println(date1); //Mon Jan 11 12:12:12 CST 2021
 
     }
 }
 ```
+
+### Math类
+
+> Java.Lang包下面的类 直接进行使用 不用导包
+
+```Java
+public static void main(String[] args) throws ParseException {
+    System.out.println(Math.PI);
+    System.out.println(Math.random());//[0,1)
+    System.out.println(Math.abs(-80)); //绝对值
+    System.out.println(Math.ceil(9.1));//向上取值
+    System.out.println(Math.floor(9.1));//向下取值
+    System.out.println(Math.round(4.6));//四舍五入
+}
+```
+
+### Random类
+
+```java
+public class DateTest {
+    public static void main(String[] args) throws ParseException {
+        Random random =new Random(); //底层还是调用有参构造
+        Random random1 = new Random(System.currentTimeMillis());//有参构造 指定种子
+        System.out.println(random.nextInt(12)); //指定生成的数字的范围
+    }
+}
+```
+

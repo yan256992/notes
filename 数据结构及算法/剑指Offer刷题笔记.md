@@ -404,4 +404,191 @@ class Solution {
 }
 ```
 
-#### 
+#### [剑指 Offer 35. 复杂链表的复制](https://leetcode-cn.com/problems/fu-za-lian-biao-de-fu-zhi-lcof/)
+
+> 请实现 copyRandomList 函数，复制一个复杂链表。在复杂链表中，每个节点除了有一个 next 指针指向下一个节点，还有一个 random 指针指向链表中的任意节点或者 null。
+>
+
+![image-20210912102953537](https://gitee.com/yan256992/cloudimages/raw/master/img/image-20210912102953537.png)
+
+```java
+class Solution {
+    public Node copyRandomList(Node head) {
+        if(head==null) return null;
+        //声明一个工作指针
+        Node cur = head;
+        //map用来保存这个链表节点 单纯的实现链表节点的复制就是靠map
+        Map<Node,Node> map = new HashMap<>();
+        //当节点不为空的时候就不断进行插入 实现链表节点的复制
+        while(cur!=null){
+            map.put(cur,new Node(cur.val));
+            cur=cur.next;
+        }
+        cur = head; //将工作指针恢复到head的状态
+        while(cur!=null){
+            //将原节点的next和random给新链表
+            map.get(cur).next = map.get(cur.next);
+            map.get(cur).random = map.get(cur.random);
+            cur = cur.next;
+        }
+        return map.get(head);
+        
+    }
+}
+```
+
+#### [剑指 Offer 36. 二叉搜索树与双向链表](https://leetcode-cn.com/problems/er-cha-sou-suo-shu-yu-shuang-xiang-lian-biao-lcof/)
+
+> 输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的循环双向链表。要求不能创建任何新的节点，只能调整树中节点指针的指向。
+
+<img src="https://gitee.com/yan256992/cloudimages/raw/master/img/image-20210912103535811.png" alt="image-20210912103535811" style="zoom: 50%;" /><img src="https://gitee.com/yan256992/cloudimages/raw/master/img/image-20210912103549435.png" alt="image-20210912103549435" style="zoom: 50%;" />
+
+```java
+class Solution {
+    Node head, pre;
+    public Node treeToDoublyList(Node root) {
+        if(root==null) return null;
+        dfs(root);
+
+        pre.right = head;
+        head.left =pre;//进行头节点和尾节点的相互指向，这两句的顺序也是可以颠倒的
+
+        return head;
+
+    }
+
+    public void dfs(Node cur){
+        if(cur==null) return;
+        dfs(cur.left);
+
+        //pre用于记录双向链表中位于cur左侧的节点，即上一次迭代中的cur,当pre==null时，cur左侧没有节点,即此时cur为双向链表中的头节点
+        if(pre==null) head = cur;
+        //反之，pre!=null时，cur左侧存在节点pre，需要进行pre.right=cur的操作。
+        else pre.right = cur;
+       
+        cur.left = pre;//pre是否为null对这句没有影响,且这句放在上面两句if else之前也是可以的。
+
+        pre = cur;//pre指向当前的cur
+        dfs(cur.right);//全部迭代完成后，pre指向双向链表中的尾节点
+    }
+}
+```
+
+#### [剑指 Offer 32 - III. 从上到下打印二叉树 III](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-iii-lcof/)
+
+> 请实现一个函数按照之字形顺序打印二叉树，即第一行按照从左到右的顺序打印，第二层按照从右到左的顺序打印，第三行再按照从左到右的顺序打印，其他行以此类推。
+
+![image-20210912150331446](https://gitee.com/yan256992/cloudimages/raw/master/img/image-20210912150331446.png)
+
+```java
+class Solution {
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        Queue<TreeNode> queue = new LinkedList<>();
+        List<List<Integer>> res = new ArrayList<>();
+        if(root!=null){
+              queue.add(root);
+        }
+        int k = 1;
+        while(!queue.isEmpty()){
+            //这里使用了双端队列 也就是说可以在两边进行插入删除操作 这样就可以实现奇数偶数行的不同方向
+            //如果是奇数行就顺序插入 也就是插入到后面 如果是偶数的话就从头插入即可
+            LinkedList<Integer> temp  = new LinkedList<>();
+            //队列里面的都是当前这一行的所有元素 遍历这一行的所有元素 
+            for(int i=queue.size();i > 0 ;i --){
+                TreeNode node = queue.poll();
+                if(k%2==1) { //判断奇偶
+                    temp.addLast(node.val);
+                }
+                else temp.addFirst(node.val);
+                if(node.left!=null) queue.add(node.left);
+                if(node.right!=null) queue.add(node.right);
+            }
+            res.add(temp);
+            k++;
+        }
+        return res;
+
+    }
+}
+```
+
+#### [剑指 Offer 38. 字符串的排列](https://leetcode-cn.com/problems/zi-fu-chuan-de-pai-lie-lcof/)
+
+> 输入一个字符串，打印出该字符串中字符的所有排列。
+>
+> 你可以以任意顺序返回这个字符串数组，但里面不能有重复元素
+>
+> 示例:
+>
+> 输入：s = "abc"
+>         输出：["abc","acb","bac","bca","cab","cba"]
+
+由于是不限制输出顺序的 所结果集可以使用Set来进行存储
+
+```java
+class Solution {
+    public  String[] permutation(String s) {
+        //来标识字符是否被访问过
+        boolean[] visited = new boolean[s.length()];
+        //初始的时候全部未访问
+        Arrays.fill(visited,false);
+        //将字符串转换为字符数组
+        char[] chars = s.toCharArray();、
+        //存储每一次的结果
+        String temp ="";
+        //存储最后返回的结果 
+        Set<String> res = new HashSet<>();
+        backtrack(chars,temp,visited,res);
+        //将Set转换为数组 数组的大小为res的size
+        return res.toArray(new String[res.size()]);
+    }
+
+    private  void backtrack(char[] chars, String temp, boolean[] visited, Set<String> res) {
+        //结束条件 如果存储临时变量的数组大小和原数组一样 就结束
+        if(chars.length == temp.length()){
+            res.add(temp);
+            return;
+        }
+        //遍历整个数组
+        for (int i = 0; i < chars.length; i++) {
+            //如果被访问过 就继续下一次循环
+            if(visited[i]) continue;
+            //将当前的位置设置为访问过
+            visited[i]=true;
+            //继续下一次的回溯
+            backtrack(chars,temp+chars[i],visited,res);
+            //回溯结束 撤销选择 设置为未访问
+            visited[i]=false;
+        }
+    }
+}
+```
+
+**回溯法模板**
+
+```java
+private void backtrack("原始参数") {
+    //终止条件(递归必须要有终止条件)
+    if ("终止条件") {
+        //一些逻辑操作（可有可无，视情况而定）
+        return;
+    }
+
+    for (int i = "for循环开始的参数"; i < "for循环结束的参数"; i++) {
+        //一些逻辑操作（可有可无，视情况而定）
+
+        //做出选择
+
+        //递归
+        backtrack("新的参数");
+        //一些逻辑操作（可有可无，视情况而定）
+
+        //撤销选择
+    }
+}
+作者：sdwwld
+链接：https://leetcode-cn.com/problems/zi-fu-chuan-de-pai-lie-lcof/solution/shu-ju-jie-gou-he-suan-fa-hui-su-suan-fa-11gk/
+来源：力扣（LeetCode）
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+```
+
